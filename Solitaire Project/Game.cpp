@@ -1,10 +1,11 @@
 #include "Game.h"
 #include"List.h"
 #include<iostream>
-#include<string>
-#include<string.h>
-#include<set>
-#include<sstream>
+#include <iomanip>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 void Game::__init__()
@@ -38,6 +39,7 @@ void Game::__init__()
 		string s;	getline(cin, s);
 		Command newCommand;
 		newCommand.setCommand(s);
+		system("cls");
 
 		// ANALYZING THE COMMAND VALIDITY
 		if (!analyzeCommandType(newCommand)) {
@@ -49,6 +51,7 @@ void Game::__init__()
 			continue;
 		}
 
+		// PRINTING DECK
 		printDeck();
 
 		// PUSHING IT INTO THE STACK
@@ -196,60 +199,125 @@ void Game::placingInStock(Card**& cards)
 
 void Game::printDeck()
 {
-	/* PRINTING TABELUES */
-	List<Card>whatTablue;
+	/* PRINTING TABLEAUS */
+	List<Card> whatTableau; int tSize;
 	string s;
 	List<Card>::Iterator i1;
-	
+
 	for (int i = 1; i <= 7; i++)
 	{
-		if (i == 1) { whatTablue = t1; s = "Tabelue 1:\n"; }
-		else if (i == 2) { whatTablue = t2; s = "Tabelue 2:\n"; }
-		else if (i == 3) { whatTablue = t3; s = "Tabelue 3:\n"; }
-		else if (i == 4) { whatTablue = t4; s = "Tabelue 4:\n"; }
-		else if (i == 5) { whatTablue = t5; s = "Tabelue 5:\n"; }
-		else if (i == 6) { whatTablue = t6; s = "Tabelue 6:\n"; }
-		else if (i == 7) { whatTablue = t7; s = "Tabelue 7:\n"; }
+		if (i == 1) { whatTableau = t1; s = "Tableau 1:\n"; }
+		else if (i == 2) { whatTableau = t2; s = "Tableau 2:\n"; }
+		else if (i == 3) { whatTableau = t3; s = "Tableau 3:\n"; }
+		else if (i == 4) { whatTableau = t4; s = "Tableau 4:\n"; }
+		else if (i == 5) { whatTableau = t5; s = "Tableau 5:\n"; }
+		else if (i == 6) { whatTableau = t6; s = "Tableau 6:\n"; }
+		else if (i == 7) { whatTableau = t7; s = "Tableau 7:\n"; }
+
 		cout << s;
-		i1 = whatTablue.begin();
-		for (int j = 0; j < i; j++) {
-			++i1;
+		i1 = whatTableau.begin();
+		for (i1 = whatTableau.end(); --i1!=whatTableau.begin();) {
 			Card newCard = *i1;
 			newCard.print();
 		}
 		cout << endl;
 	}
 
-	/* PRINTING STOCKS */
-	Stack<Card> tempStack(24);
-	int size = Stock.getStackTop();
+	/* PRINTING STOCK */
+	Stack<Card> tempStockStack(24);
+	int stockSize = Stock.getStackTop();
 	cout << "Stock: " << endl;
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < stockSize; i++)
 	{
 		Card tempCard = Stock.pop();
 		tempCard.print();
-		tempStack.push(tempCard);
+		tempStockStack.push(tempCard);
 	}
-	for (int i = 0; i < size; i++)
+	for (int i = 0; i < stockSize; i++)
 	{
-		Card tempCard = tempStack.pop();
+		Card tempCard = tempStockStack.pop();
 		Stock.push(tempCard);
 	}
-	
+
 	/* PRINTING WASTE */
-	Stack<Card> tempStack1(24);
-	int size1 = WastePile.getStackTop();
+	Stack<Card> tempWasteStack(24);
+	int wasteSize = WastePile.getStackTop();
 	cout << "Waste: " << endl;
-	for (int i = 0; i < size1; i++)
+	for (int i = 0; i < wasteSize; i++)
 	{
 		Card tempCard = WastePile.pop();
 		tempCard.print();
-		tempStack1.push(tempCard);
+		tempWasteStack.push(tempCard);
 	}
-	for (int i = 0; i < size1; i++)
+	for (int i = 0; i < wasteSize; i++)
 	{
-		Card tempCard = tempStack1.pop();
+		Card tempCard = tempWasteStack.pop();
 		WastePile.push(tempCard);
+	}
+
+	/* PRINTING FOUNDATIONS */
+	// Foundation 1
+	Stack<Card> tempFoundationStack1(13);
+	int foundationSize1 = Foundation1.getStackTop();
+	cout << "Foundation 1: " << endl;
+	for (int i = 0; i < foundationSize1; i++)
+	{
+		Card tempCard = Foundation1.pop();
+		tempCard.print();
+		tempFoundationStack1.push(tempCard);
+	}
+	for (int i = 0; i < foundationSize1; i++)
+	{
+		Card tempCard = tempFoundationStack1.pop();
+		Foundation1.push(tempCard);
+	}
+
+	// Foundation 2
+	Stack<Card> tempFoundationStack2(13);
+	int foundationSize2 = Foundation2.getStackTop();
+	cout << "Foundation 2: " << endl;
+	for (int i = 0; i < foundationSize2; i++)
+	{
+		Card tempCard = Foundation2.pop();
+		tempCard.print();
+		tempFoundationStack2.push(tempCard);
+	}
+	for (int i = 0; i < foundationSize2; i++)
+	{
+		Card tempCard = tempFoundationStack2.pop();
+		Foundation2.push(tempCard);
+	}
+
+	// Foundation 3
+	Stack<Card> tempFoundationStack3(13);
+	int foundationSize3 = Foundation3.getStackTop();
+	cout << "Foundation 3: " << endl;
+	for (int i = 0; i < foundationSize3; i++)
+	{
+		Card tempCard = Foundation3.pop();
+		tempCard.print();
+		tempFoundationStack3.push(tempCard);
+	}
+	for (int i = 0; i < foundationSize3; i++)
+	{
+		Card tempCard = tempFoundationStack3.pop();
+		Foundation3.push(tempCard);
+	}
+
+	// Foundation 4
+	Stack<Card> tempFoundationStack4(13);
+	int foundationSize4 = Foundation4.getStackTop();
+	cout << "Foundation 4: " << endl;
+	for (int i = 0; i < foundationSize4; i++)
+	{
+		Card tempCard = Foundation4.pop();
+		tempCard.print();
+		tempFoundationStack4.push(tempCard);
+	}
+	for (int i = 0; i < foundationSize4; i++)
+	{
+		Card tempCard = tempFoundationStack4.pop();
+		Foundation4.push(tempCard);
 	}
 }
 
@@ -284,7 +352,6 @@ void Game::pushCommand(Command& tempCommand)
 	int n = commands.getStackTop();
 	for (int i = 0; i < n; i++)
 	{
-		cout << commands.top().getCommand() << endl;
 		temp.push(commands.pop());
 	}
 	for (int i = 0; i < n; i++)
@@ -328,64 +395,10 @@ bool Game::validateCommandType(Command& command) {
 		char g = cmd[7];
 		char h = cmd[8];
 		if (a == ' ' && b == 'c' && (c - '0' > 0 && c - '0' < 8) && d == ',' && e == 'c' && (f - '0' > 0 && f - '0' < 8) && g == ',' && (h - '0' > 0 && h - '0' < 11)) {
-			// CHECKING COLUMNS
-			List<Card>whatColumn1;
-			List<Card>whatColumn2;
-			if (c - '0' == 1)whatColumn1 = t1;
-			else if (c - '0' == 2)whatColumn1 = t2;
-			else if (c - '0' == 3)whatColumn1 = t3;
-			else if (c - '0' == 4)whatColumn1 = t4;
-			else if (c - '0' == 5)whatColumn1 = t5;
-			else if (c - '0' == 6)whatColumn1 = t6;
-			else if (c - '0' == 7)whatColumn1 = t7;
-			if (f - '0' == 1)whatColumn2 = t1;
-			else if (f - '0' == 2)whatColumn2 = t2;
-			else if (f - '0' == 3)whatColumn2 = t3;
-			else if (f - '0' == 4)whatColumn2 = t4;
-			else if (f - '0' == 5)whatColumn2 = t5;
-			else if (f - '0' == 6)whatColumn2 = t6;
-			else if (f - '0' == 7)whatColumn2 = t7;
-
-			// MOVING LOGIC USING ITERATORS
-			string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
-			for (int i = 0; i < h-'0'; i++)
-			{
-				if (whatColumn1.isEmpty()) {
-					cout << "Not enough cards in column " << (c - '0') << endl;
-					return true;
-				}
-				List<Card>::Iterator it1 = whatColumn1.end();	--it1;
-				List<Card>::Iterator it2 = whatColumn2.end();	--it2;
-				Card column1Card = *it1;	Card column2Card = *it2;
-				if (column1Card.getColor() != column2Card.getColor()) {
-					int index1;
-					int index2;
-					for (int i = 0; i < 13; i++)
-					{
-						if (column1Card.getRank() == arr[i]) {
-							index1 = i;
-						}
-					}
-					for (int i = 0; i < 13; i++)
-					{
-						if (column2Card.getRank() == arr[i]) {
-							index2 = i;
-						}
-					}
-					if (index1 == index2 - 1) {
-						whatColumn1.removeLastElement();
-						whatColumn2.insertAtTail(column2Card);
-					}
-					else {
-						cout << "First tablue card must be one less in rank to move!" << endl;
-					}
-				}
-				else {
-					cout << "Top cards must be opposite in color to move!" << endl;
-				}
-			}
-
-			return true;
+			return tablueToTablue(c, f, h);
+		}
+		else if (a == ' ' && b == 'c' && (c - '0' > 0 && c - '0' < 8) && d == ',' && e == 'f' && (f - '0' > 0 && f - '0' < 5) && g == ',' && (h - '0' > 0 && h - '0' < 11)) {
+			return TablueToFoundation(c, f, h);
 		}
 	}
 	else if (cmdType == "z") {
@@ -398,64 +411,10 @@ bool Game::validateCommandType(Command& command) {
 		char d = cmd[6];
 		char e = cmd[7];
 		if (a == ',' && b == 'c' && (c - '0' > 0 && c - '0' < 8) && d == ',' && (e - '0' > 0 && e - '0' < 11)) {
-			// CHECKING COLUMNS
-			List<Card>whatColumn2;
-			if (c - '0' == 1)whatColumn2 = t1;
-			else if (c - '0' == 2)whatColumn2 = t2;
-			else if (c - '0' == 3)whatColumn2 = t3;
-			else if (c - '0' == 4)whatColumn2 = t4;
-			else if (c - '0' == 5)whatColumn2 = t5;
-			else if (c - '0' == 6)whatColumn2 = t6;
-			else if (c - '0' == 7)whatColumn2 = t7;
-
-			// MOVING LOGIC USING ITERATORS
-			string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
-			for (int i = 0; i < e - '0'; i++)
-			{
-				if (WastePile.isEmptyStack()) {
-					cout << "Not enough cards in waste stack!" << endl;
-					List<Card>::Iterator it = whatColumn2.end();  --it;
-					Card column2Card = *it;
-					Card wasteCard = WastePile.top();
-					if (wasteCard.getColor() != column2Card.getColor()) {
-						int index1;
-						int index2;
-						for (int i = 0; i < 13; i++)
-						{
-							if (wasteCard.getRank() == arr[i]) {
-								index1 = i;
-							}
-						}
-						for (int i = 0; i < 13; i++)
-						{
-							if (column2Card.getRank() == arr[i]) {
-								index2 = i;
-							}
-						}
-						if (index1 == index2 - 1) {
-							WastePile.pop();
-							whatColumn2.insertAtTail(wasteCard);
-						}
-						else {
-							cout << "Waste stack card must be one less in rank to move!" << endl;
-						}
-
-					}
-					else {
-						cout << "Top cards must be opposite in color to move!" << endl;
-					}
-					return true;
-				}
-			}
-			return true;
+			return wasteToTablue(c, e);
 		}
 		else if (a == ',' && b == 'f' && (c - '0' > 0 && c - '0' < 5) && d == ',' && (e - '0' > 0 && e - '0' < 11)) {
-			Stack<Card>whatStack(13);
-			if (c - '0' == 1)whatStack = Foundation1;
-			else if (c - '0' == 2)whatStack = Foundation2;
-			else if (c - '0' == 3)whatStack = Foundation3;
-			else if (c - '0' == 4)whatStack = Foundation4;
-			return true;
+			return wasteToFoundation(c, e);
 		}
 	}
 	else if (cmdType == "s") {
@@ -465,6 +424,257 @@ bool Game::validateCommandType(Command& command) {
 		}
 	}
 	return false; 
+}
+
+bool Game::wasteToFoundation(char c, char e)
+{
+	Stack<Card>foundation(13);
+	if (c - '0' == 1)foundation = Foundation1;
+	else if (c - '0' == 2)foundation = Foundation2;
+	else if (c - '0' == 3)foundation = Foundation3;
+	else if (c - '0' == 4)foundation = Foundation4;
+	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
+	for (int i = 0; i < e - '0'; i++) {
+		if (WastePile.isEmptyStack()) {
+			cout << "Not enough cards in waste stack!" << endl;
+			return true;
+		}
+		else {
+			Card wasteCard = WastePile.top();
+			if (foundation.isEmptyStack()) {
+				if (wasteCard.getRank() == "A") {
+					WastePile.pop();
+					foundation.push(wasteCard);
+					cout << "Moved " << wasteCard.getRank() << " of " << wasteCard.getSuit() << " to Foundation " << c - '0' << endl;
+					if (c - '0' == 1)Foundation1 = foundation;
+					else if (c - '0' == 2)Foundation2 = foundation;
+					else if (c - '0' == 3)Foundation3 = foundation;
+					else if (c - '0' == 4)Foundation4 = foundation;
+					return true;
+				}
+				else {
+					cout << "Only Ace can be placed in an empty foundation." << endl;
+				}
+			}
+			else {
+				Card foundationCard = foundation.top();
+				int index1 = -1, index2 = -1;
+				for (int i = 0; i < 13; i++) {
+					if (wasteCard.getRank() == arr[i]) {
+						index1 = i;
+					}
+					if (foundationCard.getRank() == arr[i]) {
+						index2 = i;
+					}
+				}
+				if (wasteCard.getSuit() == foundationCard.getSuit() && index1 == index2 + 1) {
+					WastePile.pop();
+					foundation.push(wasteCard);
+					if (c - '0' == 1)Foundation1 = foundation;
+					else if (c - '0' == 2)Foundation2 = foundation;
+					else if (c - '0' == 3)Foundation3 = foundation;
+					else if (c - '0' == 4)Foundation4 = foundation;
+					cout << "Moved " << wasteCard.getRank() << " of " << wasteCard.getSuit() << " to Foundation " << c - '0' << endl;
+				}
+				else {
+					cout << "Invalid move! The foundation card must be one less in rank and match the suit." << endl;
+				}
+			}
+		}
+	}
+	return true;
+}
+
+bool Game::wasteToTablue(char c, char e)
+{
+	// CHECKING COLUMNS
+	List<Card>whatColumn2;
+	if (c - '0' == 1)whatColumn2 = t1;
+	else if (c - '0' == 2)whatColumn2 = t2;
+	else if (c - '0' == 3)whatColumn2 = t3;
+	else if (c - '0' == 4)whatColumn2 = t4;
+	else if (c - '0' == 5)whatColumn2 = t5;
+	else if (c - '0' == 6)whatColumn2 = t6;
+	else if (c - '0' == 7)whatColumn2 = t7;
+
+	// MOVING LOGIC USING ITERATORS
+	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
+	for (int i = 0; i < e - '0'; i++)
+	{
+		if (WastePile.isEmptyStack()) {
+			cout << "Not enough cards in waste stack!" << endl;
+			return true;
+		}
+		else {
+			List<Card>::Iterator it = whatColumn2.end();  --it;
+			Card column2Card = *it;
+			Card wasteCard = WastePile.top();
+			if (wasteCard.getColor() != column2Card.getColor()) {
+				int index1;
+				int index2;
+				for (int i = 0; i < 13; i++)
+				{
+					if (wasteCard.getRank() == arr[i]) {
+						index1 = i;
+					}
+				}
+				for (int i = 0; i < 13; i++)
+				{
+					if (column2Card.getRank() == arr[i]) {
+						index2 = i;
+					}
+				}
+				if (index1 == index2 - 1) {
+					WastePile.pop();
+					whatColumn2.insertAtTail(wasteCard);
+				}
+				else {
+					cout << "Waste stack card must be one less in rank to move!" << endl;
+				}
+
+			}
+			else {
+				cout << "Top cards must be opposite in color to move!" << endl;
+			}
+			return true;
+		}
+	}
+	return true;
+}
+
+bool Game::TablueToFoundation(char c, char f, char h)
+{
+	List<Card>whatColumn1;
+	Stack<Card>foundation(13);
+	if (c - '0' == 1)whatColumn1 = t1;
+	else if (c - '0' == 2)whatColumn1 = t2;
+	else if (c - '0' == 3)whatColumn1 = t3;
+	else if (c - '0' == 4)whatColumn1 = t4;
+	else if (c - '0' == 5)whatColumn1 = t5;
+	else if (c - '0' == 6)whatColumn1 = t6;
+	else if (c - '0' == 7)whatColumn1 = t7;
+	if (f - '0' == 1)foundation = Foundation1;
+	else if (f - '0' == 2)foundation = Foundation2;
+	else if (f - '0' == 3)foundation = Foundation3;
+	else if (f - '0' == 4)foundation = Foundation4;
+
+	// MOVING LOGIC USING ITERATORS
+	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
+	for (int i = 0; i < h - '0'; i++)
+	{
+		if (whatColumn1.isEmpty()) {
+			cout << "Not enough cards in column " << (c - '0') << endl;
+			return true;
+		}
+		else {
+			List<Card>::Iterator it = whatColumn1.end();	--it;
+			Card whatCard = *it;
+			if (foundation.isEmptyStack()) {
+				whatCard.print();
+				if (whatCard.getRank() == "A") {
+					whatColumn1.removeLastElement();
+					foundation.push(whatCard);
+					cout << "Moved " << whatCard.getRank() << " of " << whatCard.getSuit() << " to Foundation " << f - '0' << endl;
+					if (f - '0' == 1)Foundation1 = foundation;
+					else if (f - '0' == 2)Foundation2 = foundation;
+					else if (f - '0' == 3)Foundation3 = foundation;
+					else if (f - '0' == 4)Foundation4 = foundation;
+					return true;
+				}
+				else {
+					cout << "Only Ace can be placed in an empty foundation." << endl;
+				}
+
+			}
+			else {
+				Card foundationCard = foundation.top();
+				int index1 = -1, index2 = -1;
+				for (int i = 0; i < 13; i++) {
+					if (whatCard.getRank() == arr[i]) {
+						index1 = i;
+					}
+					if (foundationCard.getRank() == arr[i]) {
+						index2 = i;
+					}
+				}
+				if (whatCard.getSuit() == foundationCard.getSuit() && index1 == index2 + 1) {
+					WastePile.pop();
+					foundation.push(whatCard);
+					if (c - '0' == 1)Foundation1 = foundation;
+					else if (c - '0' == 2)Foundation2 = foundation;
+					else if (c - '0' == 3)Foundation3 = foundation;
+					else if (c - '0' == 4)Foundation4 = foundation;
+					cout << "Moved " << whatCard.getRank() << " of " << whatCard.getSuit() << " to Foundation " << f - '0' << endl;
+				}
+				else {
+					cout << "Invalid move! The foundation card must be one less in rank and match the suit." << endl;
+				}
+
+			}
+		}
+	}
+	return true;
+}
+
+bool Game::tablueToTablue(char c, char f, char h)
+{
+	// CHECKING COLUMNS
+	List<Card>whatColumn1;
+	List<Card>whatColumn2;
+	if (c - '0' == 1)whatColumn1 = t1;
+	else if (c - '0' == 2)whatColumn1 = t2;
+	else if (c - '0' == 3)whatColumn1 = t3;
+	else if (c - '0' == 4)whatColumn1 = t4;
+	else if (c - '0' == 5)whatColumn1 = t5;
+	else if (c - '0' == 6)whatColumn1 = t6;
+	else if (c - '0' == 7)whatColumn1 = t7;
+	if (f - '0' == 1)whatColumn2 = t1;
+	else if (f - '0' == 2)whatColumn2 = t2;
+	else if (f - '0' == 3)whatColumn2 = t3;
+	else if (f - '0' == 4)whatColumn2 = t4;
+	else if (f - '0' == 5)whatColumn2 = t5;
+	else if (f - '0' == 6)whatColumn2 = t6;
+	else if (f - '0' == 7)whatColumn2 = t7;
+
+	// MOVING LOGIC USING ITERATORS
+	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
+	for (int i = 0; i < h - '0'; i++)
+	{
+		if (whatColumn1.isEmpty()) {
+			cout << "Not enough cards in column " << (c - '0') << endl;
+			return true;
+		}
+		List<Card>::Iterator it1 = whatColumn1.end();	--it1;
+		List<Card>::Iterator it2 = whatColumn2.end();	--it2;
+		Card column1Card = *it1;	Card column2Card = *it2;
+		if (column1Card.getColor() != column2Card.getColor()) {
+			int index1;
+			int index2;
+			for (int i = 0; i < 13; i++)
+			{
+				if (column1Card.getRank() == arr[i]) {
+					index1 = i;
+				}
+			}
+			for (int i = 0; i < 13; i++)
+			{
+				if (column2Card.getRank() == arr[i]) {
+					index2 = i;
+				}
+			}
+			if (index1 == index2 - 1) {
+				whatColumn1.removeLastElement();
+				whatColumn2.insertAtTail(column2Card);
+			}
+			else {
+				cout << "First tablue card must be one less in rank to move!" << endl;
+			}
+		}
+		else {
+			cout << "Top cards must be opposite in color to move!" << endl;
+		}
+	}
+	return true;
 }
 
 void Game::stockToWaste()
