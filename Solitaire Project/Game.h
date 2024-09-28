@@ -36,4 +36,5 @@ public:
 	void pushCommand(Command& tempCommand);
 	bool analyzeCommandType(Command& command);
 	bool validateCommandType(Command& command);
+	void stockToWaste();
 };

@@ -33,6 +33,7 @@ public:
 	void insertAtTail(T& val);
 	void removeLastElement();
 	void print();
+	bool isEmpty();
 };
 
 /* CONSTRUCTORS	*/
@@ -117,4 +118,15 @@ inline void List<T>::print()
 		temp = temp->next;
 	}
 	cout << endl;
+}
+
+template<typename T>
+inline bool List<T>::isEmpty()
+{
+	if (head) {
+		if (head->next == tail) {
+			return true;
+		}
+	}
+	return false;
 }

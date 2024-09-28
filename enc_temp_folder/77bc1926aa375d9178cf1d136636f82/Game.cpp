@@ -388,6 +388,133 @@ bool Game::validateCommandType(Command& command) {
 			return true;
 		}
 	}
+	else if (cmdType == "m" && cmd.length() == 9 && cmd[1] == 'c' && cmd[3] == 'f') {
+		char c = cmd[2];  
+		char f = cmd[4];  
+		char p = cmd[6];  
+
+		if ((c - '0' > 0 && c - '0' < 8) && (f - '0' > 0 && f - '0' < 5) && (p - '0' == 1)) {
+			List<Card> whatColumn;
+			if (c - '0' == 1) whatColumn = t1;
+			else if (c - '0' == 2) whatColumn = t2;
+			else if (c - '0' == 3) whatColumn = t3;
+			else if (c - '0' == 4) whatColumn = t4;
+			else if (c - '0' == 5) whatColumn = t5;
+			else if (c - '0' == 6) whatColumn = t6;
+			else if (c - '0' == 7) whatColumn = t7;
+
+			if (whatColumn.isEmpty()) {
+				cout << "Column " << c << " is empty!" << endl;
+				return true;
+			}
+
+			List<Card>::Iterator it = whatColumn.end();
+			--it;
+			Card columnCard = *it;
+
+			Stack<Card>* foundation = nullptr;
+			if (f - '0' == 1) foundation = &Foundation1;
+			else if (f - '0' == 2) foundation = &Foundation2;
+			else if (f - '0' == 3) foundation = &Foundation3;
+			else if (f - '0' == 4) foundation = &Foundation4;
+
+			if (foundation != nullptr) {
+				if (foundation->isEmptyStack()) {
+					if (columnCard.getRank() == "A") {
+						whatColumn.removeLastElement();
+						foundation->push(columnCard);
+						cout << "Moved " << columnCard.getRank() << " of " << columnCard.getSuit() << " to Foundation " << f << endl;
+					}
+					else {
+						cout << "Only Ace can be placed in an empty foundation." << endl;
+					}
+				}
+				else {
+					Card foundationCard = foundation->top();
+
+					string arr[13] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+					int index1 = -1, index2 = -1;
+
+					for (int i = 0; i < 13; i++) {
+						if (columnCard.getRank() == arr[i]) {
+							index1 = i;
+						}
+						if (foundationCard.getRank() == arr[i]) {
+							index2 = i;
+						}
+					}
+
+					if (columnCard.getSuit() == foundationCard.getSuit() && index1 == index2 + 1) {
+						whatColumn.removeLastElement();
+						foundation->push(columnCard);
+						cout << "Moved " << columnCard.getRank() << " of " << columnCard.getSuit() << " to Foundation " << f << endl;
+					}
+					else {
+						cout << "Invalid move! The foundation card must be one less in rank and match the suit." << endl;
+					}
+				}
+			}
+			return true;
+		}
+	}
+	else if (cmdType == "m" && cmd.length() == 9 && cmd[1] == 'w' && cmd[3] == 'f') {
+		char f = cmd[4];   
+		char p = cmd[6];
+
+		if ((f - '0' > 0 && f - '0' < 5) && (p - '0' == 1)) {
+			if (WastePile.isEmptyStack()) {
+				cout << "Waste pile is empty!" << endl;
+				return true;
+			}
+
+			Card wasteCard = WastePile.top();
+
+			Stack<Card>* foundation = nullptr;
+			if (f - '0' == 1) foundation = &Foundation1;
+			else if (f - '0' == 2) foundation = &Foundation2;
+			else if (f - '0' == 3) foundation = &Foundation3;
+			else if (f - '0' == 4) foundation = &Foundation4;
+
+			if (foundation != nullptr) {
+				if (foundation->isEmptyStack()) {
+					if (wasteCard.getRank() == "A") {
+						WastePile.pop();
+						foundation->push(wasteCard);
+						cout << "Moved " << wasteCard.getRank() << " of " << wasteCard.getSuit() << " from Waste to Foundation " << f << endl;
+					}
+					else {
+						cout << "Only Ace can be placed in an empty foundation." << endl;
+					}
+				}
+				else {
+					Card foundationCard = foundation->top();
+
+					string arr[13] = { "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K" };
+					int index1 = -1, index2 = -1;
+
+					for (int i = 0; i < 13; i++) {
+						if (wasteCard.getRank() == arr[i]) {
+							index1 = i;
+						}
+						if (foundationCard.getRank() == arr[i]) {
+							index2 = i;
+						}
+					}
+
+					if (wasteCard.getSuit() == foundationCard.getSuit() && index1 == index2 + 1) {
+						WastePile.pop();
+						foundation->push(wasteCard);
+						cout << "Moved " << wasteCard.getRank() << " of " << wasteCard.getSuit() << " from Waste to Foundation " << f << endl;
+					}
+					else {
+						cout << "Invalid move! The foundation card must be one less in rank and match the suit." << endl;
+					}
+				}
+			}
+			return true;
+		}
+		}
+
 	else if (cmdType == "z") {
 		return command.getCommand() == "z";
 	}
@@ -447,14 +574,6 @@ bool Game::validateCommandType(Command& command) {
 					return true;
 				}
 			}
-			return true;
-		}
-		else if (a == ',' && b == 'f' && (c - '0' > 0 && c - '0' < 5) && d == ',' && (e - '0' > 0 && e - '0' < 11)) {
-			Stack<Card>whatStack(13);
-			if (c - '0' == 1)whatStack = Foundation1;
-			else if (c - '0' == 2)whatStack = Foundation2;
-			else if (c - '0' == 3)whatStack = Foundation3;
-			else if (c - '0' == 4)whatStack = Foundation4;
 			return true;
 		}
 	}
