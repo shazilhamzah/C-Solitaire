@@ -34,6 +34,7 @@ public:
 	void removeLastElement();
 	void print();
 	bool isEmpty();
+	int getLength();
 };
 
 /* CONSTRUCTORS	*/
@@ -96,6 +97,7 @@ void List<T>::insertAtTail(T& val) {
 	newNode->prev = this->tail->prev;
 	this->tail->prev->next = newNode;
 	this->tail->prev = newNode;
+	this->length++;
 }
 
 template<typename T>
@@ -107,6 +109,7 @@ inline void List<T>::removeLastElement()
 		this->tail->prev = remove->prev;
 		delete remove;
 	}
+	this->length--;
 }
 
 template<typename T>
@@ -130,3 +133,11 @@ inline bool List<T>::isEmpty()
 	}
 	return false;
 }
+
+template<typename T>
+inline int List<T>::getLength()
+{
+	return length;
+}
+
+

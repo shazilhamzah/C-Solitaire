@@ -39,6 +39,6 @@ public:
 	bool wasteToFoundation(char c, char e);
 	bool wasteToTablue(char c, char e);
 	bool TablueToFoundation(char c, char f, char h);
-	bool tablueToTablue(char c, char f, char h);
+	bool tablueToTablue (char c, char f, char h);
 	void stockToWaste();
 };

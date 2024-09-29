@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include"List.h"
 #include<iostream>
 #include <iomanip>
@@ -6,6 +6,7 @@
 #include <vector>
 #include <cstdlib>
 #include <ctime>
+#include <locale>
 using namespace std;
 
 void Game::__init__()
@@ -39,7 +40,6 @@ void Game::__init__()
 		string s;	getline(cin, s);
 		Command newCommand;
 		newCommand.setCommand(s);
-		system("cls");
 
 		// ANALYZING THE COMMAND VALIDITY
 		if (!analyzeCommandType(newCommand)) {
@@ -50,6 +50,8 @@ void Game::__init__()
 			cout << "Invalid Command!" << endl;
 			continue;
 		}
+
+		system("cls");
 
 		// PRINTING DECK
 		printDeck();
@@ -197,128 +199,202 @@ void Game::placingInStock(Card**& cards)
 	}
 }
 
+//void Game::printDeck()
+//{
+//	/* PRINTING TABLEAUS */
+//	List<Card> whatTableau; int tSize;
+//	string s;
+//	List<Card>::Iterator i1;
+//
+//	for (int i = 1; i <= 7; i++)
+//	{
+//		if (i == 1) { whatTableau = t1; s = "Tableau 1:\n"; }
+//		else if (i == 2) { whatTableau = t2; s = "Tableau 2:\n"; }
+//		else if (i == 3) { whatTableau = t3; s = "Tableau 3:\n"; }
+//		else if (i == 4) { whatTableau = t4; s = "Tableau 4:\n"; }
+//		else if (i == 5) { whatTableau = t5; s = "Tableau 5:\n"; }
+//		else if (i == 6) { whatTableau = t6; s = "Tableau 6:\n"; }
+//		else if (i == 7) { whatTableau = t7; s = "Tableau 7:\n"; }
+//
+//		cout << s;
+//		i1 = whatTableau.begin();
+//		for (i1 = whatTableau.end(); --i1!=whatTableau.begin();) {
+//			Card newCard = *i1;
+//			newCard.print();
+//		}
+//		cout << endl;
+//	}
+//
+//	/* PRINTING STOCK */
+//	Stack<Card> tempStockStack(24);
+//	int stockSize = Stock.getStackTop();
+//	cout << "Stock: " << endl;
+//	for (int i = 0; i < stockSize; i++)
+//	{
+//		Card tempCard = Stock.pop();
+//		tempCard.print();
+//		tempStockStack.push(tempCard);
+//	}
+//	for (int i = 0; i < stockSize; i++)
+//	{
+//		Card tempCard = tempStockStack.pop();
+//		Stock.push(tempCard);
+//	}
+//
+//	/* PRINTING WASTE */
+//	Stack<Card> tempWasteStack(24);
+//	int wasteSize = WastePile.getStackTop();
+//	cout << "Waste: " << endl;
+//	for (int i = 0; i < wasteSize; i++)
+//	{
+//		Card tempCard = WastePile.pop();
+//		tempCard.print();
+//		tempWasteStack.push(tempCard);
+//	}
+//	for (int i = 0; i < wasteSize; i++)
+//	{
+//		Card tempCard = tempWasteStack.pop();
+//		WastePile.push(tempCard);
+//	}
+//
+//	/* PRINTING FOUNDATIONS */
+//	// Foundation 1
+//	Stack<Card> tempFoundationStack1(13);
+//	int foundationSize1 = Foundation1.getStackTop();
+//	cout << "Foundation 1: " << endl;
+//	for (int i = 0; i < foundationSize1; i++)
+//	{
+//		Card tempCard = Foundation1.pop();
+//		tempCard.print();
+//		tempFoundationStack1.push(tempCard);
+//	}
+//	for (int i = 0; i < foundationSize1; i++)
+//	{
+//		Card tempCard = tempFoundationStack1.pop();
+//		Foundation1.push(tempCard);
+//	}
+//
+//	// Foundation 2
+//	Stack<Card> tempFoundationStack2(13);
+//	int foundationSize2 = Foundation2.getStackTop();
+//	cout << "Foundation 2: " << endl;
+//	for (int i = 0; i < foundationSize2; i++)
+//	{
+//		Card tempCard = Foundation2.pop();
+//		tempCard.print();
+//		tempFoundationStack2.push(tempCard);
+//	}
+//	for (int i = 0; i < foundationSize2; i++)
+//	{
+//		Card tempCard = tempFoundationStack2.pop();
+//		Foundation2.push(tempCard);
+//	}
+//
+//	// Foundation 3
+//	Stack<Card> tempFoundationStack3(13);
+//	int foundationSize3 = Foundation3.getStackTop();
+//	cout << "Foundation 3: " << endl;
+//	for (int i = 0; i < foundationSize3; i++)
+//	{
+//		Card tempCard = Foundation3.pop();
+//		tempCard.print();
+//		tempFoundationStack3.push(tempCard);
+//	}
+//	for (int i = 0; i < foundationSize3; i++)
+//	{
+//		Card tempCard = tempFoundationStack3.pop();
+//		Foundation3.push(tempCard);
+//	}
+//
+//	// Foundation 4
+//	Stack<Card> tempFoundationStack4(13);
+//	int foundationSize4 = Foundation4.getStackTop();
+//	cout << "Foundation 4: " << endl;
+//	for (int i = 0; i < foundationSize4; i++)
+//	{
+//		Card tempCard = Foundation4.pop();
+//		tempCard.print();
+//		tempFoundationStack4.push(tempCard);
+//	}
+//	for (int i = 0; i < foundationSize4; i++)
+//	{
+//		Card tempCard = tempFoundationStack4.pop();
+//		Foundation4.push(tempCard);
+//	}
+//}
+
+string whatColor(string s) {
+	const std::string RED = "\033[31m";
+	const std::string BLACK = "\033[30m";
+	const std::string RESET = "\033[0m";
+	const std::string BOLD = "\033[1m";
+	if (s == "Red") {
+		return RED;
+	}
+	else {
+		return "";
+	}
+}
+
 void Game::printDeck()
 {
-	/* PRINTING TABLEAUS */
-	List<Card> whatTableau; int tSize;
-	string s;
-	List<Card>::Iterator i1;
+	const std::string RED = "\033[31m";
+	const std::string BLACK = "\033[30m";
+	const std::string RESET = "\033[0m";
+	const std::string BOLD = "\033[1m";
 
-	for (int i = 1; i <= 7; i++)
-	{
-		if (i == 1) { whatTableau = t1; s = "Tableau 1:\n"; }
-		else if (i == 2) { whatTableau = t2; s = "Tableau 2:\n"; }
-		else if (i == 3) { whatTableau = t3; s = "Tableau 3:\n"; }
-		else if (i == 4) { whatTableau = t4; s = "Tableau 4:\n"; }
-		else if (i == 5) { whatTableau = t5; s = "Tableau 5:\n"; }
-		else if (i == 6) { whatTableau = t6; s = "Tableau 6:\n"; }
-		else if (i == 7) { whatTableau = t7; s = "Tableau 7:\n"; }
+	// ROW 1 - TOP HEADINGS
+	cout << "STOCK\t\tWASTE\t\t\tFOUNDATION 1\tFOUNDATION 2\tFOUNDATION 3\tFOUNDATION 4\n";
 
-		cout << s;
-		i1 = whatTableau.begin();
-		for (i1 = whatTableau.end(); --i1!=whatTableau.begin();) {
-			Card newCard = *i1;
-			newCard.print();
-		}
-		cout << endl;
+	//ROW 2	- TOP CARD
+	cout << "[  ]\t\t";
+	if (!WastePile.isEmptyStack()) {
+		string s = whatColor(WastePile.top().getColor());
+		cout << s << WastePile.top().getRank() << " of " << WastePile.top().getSuit() << RESET << "\t\t";
 	}
-
-	/* PRINTING STOCK */
-	Stack<Card> tempStockStack(24);
-	int stockSize = Stock.getStackTop();
-	cout << "Stock: " << endl;
-	for (int i = 0; i < stockSize; i++)
-	{
-		Card tempCard = Stock.pop();
-		tempCard.print();
-		tempStockStack.push(tempCard);
+	else {
+		cout << "[  ]\t\t\t";
 	}
-	for (int i = 0; i < stockSize; i++)
-	{
-		Card tempCard = tempStockStack.pop();
-		Stock.push(tempCard);
+	if (!Foundation1.isEmptyStack()) {
+		string s = whatColor(Foundation1.top().getColor());
+		cout << s << Foundation1.top().getRank() << " of " << Foundation1.top().getSuit() << RESET<<"\t\t";
 	}
-
-	/* PRINTING WASTE */
-	Stack<Card> tempWasteStack(24);
-	int wasteSize = WastePile.getStackTop();
-	cout << "Waste: " << endl;
-	for (int i = 0; i < wasteSize; i++)
-	{
-		Card tempCard = WastePile.pop();
-		tempCard.print();
-		tempWasteStack.push(tempCard);
+	else {
+		cout << "[  ]\t\t";
 	}
-	for (int i = 0; i < wasteSize; i++)
-	{
-		Card tempCard = tempWasteStack.pop();
-		WastePile.push(tempCard);
+	if (!Foundation2.isEmptyStack()) {
+		string s = whatColor(Foundation2.top().getColor());
+		cout << s << Foundation2.top().getRank() << " of " << Foundation2.top().getSuit() << RESET << "\t\t";
+	}
+	else {
+		cout << "[  ]\t\t";
+	}
+	if (!Foundation3.isEmptyStack()) {
+		string s = whatColor(Foundation3.top().getColor());
+		cout << s << Foundation3.top().getRank() << " of " << Foundation3.top().getSuit() << RESET << "\t\t";
+	}
+	else {
+		cout << "[  ]\t\t";
+	}
+	if (!Foundation4.isEmptyStack()) {
+		string s = whatColor(Foundation4.top().getColor());
+		cout << s << Foundation4.top().getRank() << " of " << Foundation4.top().getSuit() << RESET << "\n";
+	}
+	else {
+		cout << "[  ]\n";
 	}
 
-	/* PRINTING FOUNDATIONS */
-	// Foundation 1
-	Stack<Card> tempFoundationStack1(13);
-	int foundationSize1 = Foundation1.getStackTop();
-	cout << "Foundation 1: " << endl;
-	for (int i = 0; i < foundationSize1; i++)
-	{
-		Card tempCard = Foundation1.pop();
-		tempCard.print();
-		tempFoundationStack1.push(tempCard);
-	}
-	for (int i = 0; i < foundationSize1; i++)
-	{
-		Card tempCard = tempFoundationStack1.pop();
-		Foundation1.push(tempCard);
-	}
+	// ROW 3 - CARD COUNTS
+	cout << "(" << Stock.getStackTop() << " cards)\t" << "(" << WastePile.getStackTop() << " cards)\t\t" << "(" << Foundation1.getStackTop() << " cards)\t" << "(" << Foundation2.getStackTop() << " cards)\t" << Foundation3.getStackTop() << " cards)\t" << Foundation4.getStackTop() << " cards)\n\n\n";
 
-	// Foundation 2
-	Stack<Card> tempFoundationStack2(13);
-	int foundationSize2 = Foundation2.getStackTop();
-	cout << "Foundation 2: " << endl;
-	for (int i = 0; i < foundationSize2; i++)
-	{
-		Card tempCard = Foundation2.pop();
-		tempCard.print();
-		tempFoundationStack2.push(tempCard);
-	}
-	for (int i = 0; i < foundationSize2; i++)
-	{
-		Card tempCard = tempFoundationStack2.pop();
-		Foundation2.push(tempCard);
-	}
+	// ROW 4 - COLUMN HEADINGS
+	cout << "Column 1\t" << "Column 2\t" << "Column 3\t" << "Column 4\t" << "Column 5\t" << "Column 6\t" << "Column 7\t" << endl;
 
-	// Foundation 3
-	Stack<Card> tempFoundationStack3(13);
-	int foundationSize3 = Foundation3.getStackTop();
-	cout << "Foundation 3: " << endl;
-	for (int i = 0; i < foundationSize3; i++)
-	{
-		Card tempCard = Foundation3.pop();
-		tempCard.print();
-		tempFoundationStack3.push(tempCard);
-	}
-	for (int i = 0; i < foundationSize3; i++)
-	{
-		Card tempCard = tempFoundationStack3.pop();
-		Foundation3.push(tempCard);
-	}
+	// ROW 5 - COLUMN CARD COUNTS
+	cout << "(" << t1.getLength() << " cards)\t" << "(" << t2.getLength() << " cards)\t" << "(" << t3.getLength() << " cards)\t" << "(" << t4.getLength() << " cards)\t" << "(" << t5.getLength() << " cards)\t" << "(" << t6.getLength() << " cards)\t" << "(" << t7.getLength() << " cards)\n\n";
 
-	// Foundation 4
-	Stack<Card> tempFoundationStack4(13);
-	int foundationSize4 = Foundation4.getStackTop();
-	cout << "Foundation 4: " << endl;
-	for (int i = 0; i < foundationSize4; i++)
-	{
-		Card tempCard = Foundation4.pop();
-		tempCard.print();
-		tempFoundationStack4.push(tempCard);
-	}
-	for (int i = 0; i < foundationSize4; i++)
-	{
-		Card tempCard = tempFoundationStack4.pop();
-		Foundation4.push(tempCard);
-	}
+	// ROW 6 - CARDS
+
 }
 
 bool Game::matchWon()
