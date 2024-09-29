@@ -32,6 +32,7 @@ public:
 	void placingInTableu(Card**& cards);
 	void placingInStock(Card**& cards);
 	void printDeck();
+	void printDeck1();
 	bool matchWon();
 	void pushCommand(Command& tempCommand);
 	bool analyzeCommandType(Command& command);
@@ -41,4 +42,14 @@ public:
 	bool TablueToFoundation(char c, char f, char h);
 	bool tablueToTablue (char c, char f, char h);
 	void stockToWaste();
+	void makeTopVisible();
+
+	Stack<Card>& getFoundationFromChar(char foundationNum);
+	List<Card>& getPileFromChar(char col);
+	bool undoStockToWaste();
+	bool undoWasteToFoundation(char foundationNum);
+	bool undoLastMove();
+	bool undoTableauToTableau(char sourceCol, char destCol, char numCards);
+	bool undoTableauToFoundation(char sourceCol, char foundationNum, char numCards);
+	bool undoWasteToTableau(char destCol);
 };

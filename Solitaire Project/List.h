@@ -19,6 +19,7 @@ public:
 	struct Iterator {
 		Iterator() { this->current = nullptr; }
 		Iterator(Node* ptr) { this->current = ptr; }
+		Iterator operator=(Iterator rhs) { this->current = rhs.current; return *this; }
 		T operator*() { return this->current->data; }
 		Iterator operator++() { this->current = this->current->next; return *this; }
 		Iterator operator--() { this->current = this->current->prev; return *this; }
@@ -35,6 +36,8 @@ public:
 	void print();
 	bool isEmpty();
 	int getLength();
+	void setLength(int n);
+	T& getLastElement();
 };
 
 /* CONSTRUCTORS	*/
@@ -140,4 +143,16 @@ inline int List<T>::getLength()
 	return length;
 }
 
+template<typename T>
+inline void List<T>::setLength(int n)
+{
+	this->length = n;
+}
 
+template<typename T>
+inline T& List<T>::getLastElement()
+{
+	if (tail->prev != head) {
+		return tail->prev->data;
+	}
+}
