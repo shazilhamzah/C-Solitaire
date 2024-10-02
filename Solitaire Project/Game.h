@@ -52,4 +52,5 @@ public:
 	bool undoTableauToTableau(char sourceCol, char destCol, char numCards);
 	bool undoTableauToFoundation(char sourceCol, char foundationNum, char numCards);
 	bool undoWasteToTableau(char destCol);
+	void printFoundation(const Stack<Card>& foundation);
 };

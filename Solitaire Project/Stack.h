@@ -70,7 +70,7 @@ inline Stack<T>::Stack(int stackSize)
 			maxSize = stackSize;
 		}
 		stackTop = 0;
-		linkedList = List<T>();
+		//linkedList = List<T>();
 }
 
 template<class T>

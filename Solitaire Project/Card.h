@@ -9,7 +9,7 @@ class Card {
 	string color;
 	bool hide;
 public:
-	Card():suit(""),rank(""),hide(false) {}
+	Card():suit(""),rank(""),hide(true) {}
 	Card(string suit1, string rank1,string c,bool b) :suit(suit1), rank(rank1),color(c),hide(b) {}
 	Card(const Card& right) { this->color = right.color; this->rank = right.rank; this->suit = right.suit; this->hide = right.hide; }
 	Card operator=(const Card& right) { this->color = right.color; this->rank = right.rank; this->suit = right.suit; this->hide = right.hide; return *this; }

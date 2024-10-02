@@ -44,6 +44,10 @@ void Game::__init__()
 		Command newCommand;
 		newCommand.setCommand(s);
 
+		if (s == "quit") {
+			break;
+		}
+
 		// ANALYZING THE COMMAND VALIDITY
 		if (!analyzeCommandType(newCommand)) {
 			cout << "Invalid Command!" << endl;
@@ -57,11 +61,11 @@ void Game::__init__()
 		system("cls");
 
 		/* MAKING TOP VISIBLE */
-		//makeTopVisible();
+		makeTopVisible();
 
 		// PRINTING DECK
+		//printDeck1();
 		printDeck();
-		printDeck1();
 
 		// PUSHING IT INTO THE STACK
 		pushCommand(newCommand);
@@ -350,6 +354,11 @@ void Game::printDeck()
 	const std::string RESET = "\033[0m";
 	const std::string BOLD = "\033[1m";
 
+	const string CLUB = u8"\u2663";
+	const string SPADE = u8"\u2664";
+	const string HEART = u8"\u2665";
+	const string DIAMOND = u8"\u2666";
+
 	// ROW 1 - TOP HEADINGS
 	cout << "STOCK\t\tWASTE\t\t\tFOUNDATION 1\tFOUNDATION 2\tFOUNDATION 3\tFOUNDATION 4\n";
 
@@ -357,13 +366,23 @@ void Game::printDeck()
 	cout << "[  ]\t\t";
 	if (!WastePile.isEmptyStack()) {
 		string s = whatColor(WastePile.top().getColor());
-		cout << s << WastePile.top().getRank() << " of " << WastePile.top().getSuit() << RESET << "\t\t";
+		string p = "";
+		if (WastePile.top().getSuit() == "Hearts") p = HEART;
+		if (WastePile.top().getSuit() == "Diamonds") p = DIAMOND;
+		if (WastePile.top().getSuit() == "Spades") p = SPADE;
+		if (WastePile.top().getSuit() == "Clubs") p = CLUB;
+		cout << s << WastePile.top().getRank() <<  p << RESET << "\t\t";
 	}
 	else {
 		cout << "[  ]\t\t\t";
 	}
 	if (!Foundation1.isEmptyStack()) {
 		string s = whatColor(Foundation1.top().getColor());
+		string p = "";
+		if (Foundation1.top().getSuit() == "Hearts") p = HEART;
+		else if (Foundation1.top().getSuit() == "Diamonds") p = DIAMOND;
+		else if (Foundation1.top().getSuit() == "Spades") p = SPADE;
+		else if (Foundation1.top().getSuit() == "Clubs") p = CLUB;
 		cout << s << Foundation1.top().getRank() << " of " << Foundation1.top().getSuit() << RESET<<"\t";
 	}
 	else {
@@ -403,13 +422,13 @@ void Game::printDeck()
 	// ROW 6 - CARDS
 	List<Card> whatTableau; int tSize;
 	string s;
-	List<Card>::Iterator i1 = t1.end(); --i1;
-	List<Card>::Iterator i2 = t2.end(); --i2;
-	List<Card>::Iterator i3 = t3.end(); --i3;
-	List<Card>::Iterator i4 = t4.end(); --i4;
-	List<Card>::Iterator i5 = t5.end(); --i5;
-	List<Card>::Iterator i6 = t6.end(); --i6;
-	List<Card>::Iterator i7 = t7.end(); --i7;
+	List<Card>::Iterator i1 = t1.begin(); ++i1;
+	List<Card>::Iterator i2 = t2.begin(); ++i2;
+	List<Card>::Iterator i3 = t3.begin(); ++i3;
+	List<Card>::Iterator i4 = t4.begin(); ++i4;
+	List<Card>::Iterator i5 = t5.begin(); ++i5;
+	List<Card>::Iterator i6 = t6.begin(); ++i6;
+	List<Card>::Iterator i7 = t7.begin(); ++i7;
 	List<Card>::Iterator whatIterator;
 	int findMax[7] = { t1.getLength(),t2.getLength(),t3.getLength() ,t4.getLength() ,t5.getLength() ,t6.getLength() ,t7.getLength() };
 	int max=0;
@@ -419,7 +438,7 @@ void Game::printDeck()
 		}
 	}
 
-	for (int j = 0; j < max; j++) {
+	for (int j = 0; j < 20; j++) {
 		for (int i = 1; i <= 7; i++) {
 			// Select the correct column
 			List<Card>::Iterator whatIterator;
@@ -430,33 +449,49 @@ void Game::printDeck()
 			else if (i == 5 && j < t5.getLength()) { whatIterator = i5; }
 			else if (i == 6 && j < t6.getLength()) { whatIterator = i6; }
 			else if (i == 7 && j < t7.getLength()) { whatIterator = i7; }
-			else { // No more cards in this column, print empty space
+			else { // No more cards in this column, print empty space	
 				cout << "\t\t";
 				continue;
 			}
 
 			// Print the card
-			Card tmpCard = *whatIterator;
-			if (tmpCard.getColor() == "Red" || tmpCard.getColor() == "Black") {
-				if (tmpCard.getHide()) {
-					cout << "[  ]\t\t";
+			if (whatIterator != t1.end() && whatIterator != t2.end() && whatIterator != t3.end() && whatIterator != t4.end() && whatIterator != t5.end() && whatIterator != t6.end() && whatIterator != t7.end()) {
+				Card tmpCard = *whatIterator;
+				if (tmpCard.getColor() == "Red" || tmpCard.getColor() == "Black") {
+					if (tmpCard.getHide()) {
+						cout << "[  ]\t\t";
+					}
+					else {
+						string s = whatColor(tmpCard.getColor());
+						cout << s << tmpCard.getRank() << " of " << tmpCard.getSuit() << RESET << "\t";
+					}
 				}
-				else {
-					string s = whatColor(tmpCard.getColor());
-					cout << s << tmpCard.getRank() << " of " << tmpCard.getSuit() << RESET << "\t";
-				}
-			}
 
-			// Decrement the iterator if there are more cards left to print
-			if (i == 1 && i1 != t1.begin()) --i1;
-			else if (i == 2 && i2 != t2.begin()) --i2;
-			else if (i == 3 && i3 != t3.begin()) --i3;
-			else if (i == 4 && i4 != t4.begin()) --i4;
-			else if (i == 5 && i5 != t5.begin()) --i5;
-			else if (i == 6 && i6 != t6.begin()) --i6;
-			else if (i == 7 && i7 != t7.begin()) --i7;
+				// Decrement the iterator if there are more cards left to print
+				if (i == 1) ++i1;
+				else if (i == 2) ++i2;
+				else if (i == 3) ++i3;
+				else if (i == 4) ++i4;
+				else if (i == 5) ++i5;
+				else if (i == 6) ++i6;
+				else if (i == 7) ++i7;
+			}
 		}
 		cout << endl;
+	}
+}
+
+void Game::printFoundation(const Stack<Card>& foundation)
+{
+	const std::string RED = "\033[31m";
+	const std::string RESET = "\033[0m";
+	const std::string BOLD = "\033[1m";
+	if (!foundation.isEmptyStack()) {
+		string s = whatColor(foundation.top().getColor());
+		cout << s << foundation.top().getRank() << " of " << foundation.top().getSuit() << RESET << "\t";
+	}
+	else {
+		cout << "[  ]\t\t";
 	}
 }
 
@@ -572,7 +607,7 @@ bool Game::wasteToFoundation(char c, char e)
 	else if (c - '0' == 2)foundation = Foundation2;
 	else if (c - '0' == 3)foundation = Foundation3;
 	else if (c - '0' == 4)foundation = Foundation4;
-	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
+	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };
 	for (int i = 0; i < e - '0'; i++) {
 		if (WastePile.isEmptyStack()) {
 			cout << "Not enough cards in waste stack!" << endl;
@@ -637,7 +672,7 @@ bool Game::wasteToTablue(char c, char e)
 	else if (c - '0' == 7)whatColumn2 = t7;
 
 	// MOVING LOGIC USING ITERATORS
-	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
+	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };
 	for (int i = 0; i < e - '0'; i++)
 	{
 		if (WastePile.isEmptyStack()) {
@@ -667,6 +702,13 @@ bool Game::wasteToTablue(char c, char e)
 					WastePile.pop();
 					wasteCard.setHide(false);
 					whatColumn2.insertAtTail(wasteCard);
+					if (c - '0' == 1) t1 = whatColumn2;
+					else if (c - '0' == 2) t2 = whatColumn2;
+					else if (c - '0' == 3) t3 = whatColumn2;
+					else if (c - '0' == 4) t4 = whatColumn2;
+					else if (c - '0' == 5) t5 = whatColumn2;
+					else if (c - '0' == 6) t6 = whatColumn2;
+					else if (c - '0' == 7) t7 = whatColumn2;
 				}
 				else {
 					cout << "Waste stack card must be one less in rank to move!" << endl;
@@ -685,6 +727,7 @@ bool Game::wasteToTablue(char c, char e)
 bool Game::TablueToFoundation(char c, char f, char h)
 {
 	List<Card>whatColumn1;
+	cout << "\n"<<c - '0' << endl;
 	Stack<Card>foundation(13);
 	if (c - '0' == 1)whatColumn1 = t1;
 	else if (c - '0' == 2)whatColumn1 = t2;
@@ -699,7 +742,7 @@ bool Game::TablueToFoundation(char c, char f, char h)
 	else if (f - '0' == 4)foundation = Foundation4;
 
 	// MOVING LOGIC USING ITERATORS
-	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };
+	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };
 	for (int i = 0; i < h - '0'; i++)
 	{
 		if (whatColumn1.isEmpty()) {
@@ -719,6 +762,13 @@ bool Game::TablueToFoundation(char c, char f, char h)
 					else if (f - '0' == 2)Foundation2 = foundation;
 					else if (f - '0' == 3)Foundation3 = foundation;
 					else if (f - '0' == 4)Foundation4 = foundation;
+					if (c - '0' == 1) t1 = whatColumn1;
+					else if (c - '0' == 2) t2 = whatColumn1;
+					else if (c - '0' == 3) t3 = whatColumn1;
+					else if (c - '0' == 4) t4 = whatColumn1;
+					else if (c - '0' == 5) t5 = whatColumn1;
+					else if (c - '0' == 6) t6 = whatColumn1;
+					else if (c - '0' == 7) t7 = whatColumn1;
 					return true;
 				}
 				else {
@@ -833,6 +883,21 @@ bool Game::tablueToTablue(char c, char f, char h)
 			return false;
 		}
 	}
+	if (c - '0' == 1) t1 = whatColumn1;
+	else if (c - '0' == 2) t2 = whatColumn1;
+	else if (c - '0' == 3) t3 = whatColumn1;
+	else if (c - '0' == 4) t4 = whatColumn1;
+	else if (c - '0' == 5) t5 = whatColumn1;
+	else if (c - '0' == 6) t6 = whatColumn1;
+	else if (c - '0' == 7) t7 = whatColumn1;
+
+	if (f - '0' == 1) t1 = whatColumn2;
+	else if (f - '0' == 2) t2 = whatColumn2;
+	else if (f - '0' == 3) t3 = whatColumn2;
+	else if (f - '0' == 4) t4 = whatColumn2;
+	else if (f - '0' == 5) t5 = whatColumn2;
+	else if (f - '0' == 6) t6 = whatColumn2;
+	else if (f - '0' == 7) t7 = whatColumn2;
 	return true;
 }
 
@@ -1058,6 +1123,6 @@ Stack<Card>& Game::getFoundationFromChar(char foundationNum) {
 	case '2': return Foundation2;
 	case '3': return Foundation3;
 	case '4': return Foundation4;
-	default: throw std::runtime_error("Invalid foundation number");
+	default: throw runtime_error("Invalid foundation number");
 	}
 }
