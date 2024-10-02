@@ -91,6 +91,11 @@ void Game::printCards(Card** cards)
 
 void Game::settingCards(Card** cards, int& n)
 {
+	const string CLUB = u8"\u2663";
+	const string SPADE = u8"\u2664";
+	const string HEART = u8"\u2665";
+	const string DIAMOND = u8"\u2666";
+
 	/* SETTING UP DIAMOND CARDS */
 	for (int i = 2; i < 11; i++) {
 		string c = (i == 10) ? "10" : to_string(i);
@@ -102,7 +107,7 @@ void Game::settingCards(Card** cards, int& n)
 	cards[n]->setRank("K");	n++;
 	cards[n]->setRank("Q");	n++;
 	for (int i = n - 13; i < n; i++) {
-		cards[i]->setSuit("Diamonds");
+		cards[i]->setSuit(DIAMOND);
 		cards[i]->setColor("Red");
 	}
 
@@ -117,7 +122,7 @@ void Game::settingCards(Card** cards, int& n)
 	cards[n]->setRank("K");	n++;
 	cards[n]->setRank("Q");	n++;
 	for (int i = n - 13; i < n; i++) {
-		cards[i]->setSuit("Hearts");
+		cards[i]->setSuit(HEART);
 		cards[i]->setColor("Red");
 	}
 
@@ -132,7 +137,7 @@ void Game::settingCards(Card** cards, int& n)
 	cards[n]->setRank("K");	n++;
 	cards[n]->setRank("Q");	n++;
 	for (int i = n - 13; i < n; i++) {
-		cards[i]->setSuit("Spades");
+		cards[i]->setSuit(SPADE);
 		cards[i]->setColor("Black");
 	}
 	/* SETTING UP CLUB CARDS */
@@ -146,7 +151,7 @@ void Game::settingCards(Card** cards, int& n)
 	cards[n]->setRank("K");	n++;
 	cards[n]->setRank("Q");	n++;
 	for (int i = n - 13; i < n; i++) {
-		cards[i]->setSuit("Clubs");
+		cards[i]->setSuit(CLUB);
 		cards[i]->setColor("Black");
 	}
 }
@@ -354,11 +359,6 @@ void Game::printDeck()
 	const std::string RESET = "\033[0m";
 	const std::string BOLD = "\033[1m";
 
-	const string CLUB = u8"\u2663";
-	const string SPADE = u8"\u2664";
-	const string HEART = u8"\u2665";
-	const string DIAMOND = u8"\u2666";
-
 	// ROW 1 - TOP HEADINGS
 	cout << "STOCK\t\tWASTE\t\t\tFOUNDATION 1\tFOUNDATION 2\tFOUNDATION 3\tFOUNDATION 4\n";
 
@@ -366,45 +366,35 @@ void Game::printDeck()
 	cout << "[  ]\t\t";
 	if (!WastePile.isEmptyStack()) {
 		string s = whatColor(WastePile.top().getColor());
-		string p = "";
-		if (WastePile.top().getSuit() == "Hearts") p = HEART;
-		if (WastePile.top().getSuit() == "Diamonds") p = DIAMOND;
-		if (WastePile.top().getSuit() == "Spades") p = SPADE;
-		if (WastePile.top().getSuit() == "Clubs") p = CLUB;
-		cout << s << WastePile.top().getRank() <<  p << RESET << "\t\t";
+		cout << s << WastePile.top().getRank() <<  " of " << WastePile.top().getSuit() << RESET << "\t\t";
 	}
 	else {
 		cout << "[  ]\t\t\t";
 	}
 	if (!Foundation1.isEmptyStack()) {
 		string s = whatColor(Foundation1.top().getColor());
-		string p = "";
-		if (Foundation1.top().getSuit() == "Hearts") p = HEART;
-		else if (Foundation1.top().getSuit() == "Diamonds") p = DIAMOND;
-		else if (Foundation1.top().getSuit() == "Spades") p = SPADE;
-		else if (Foundation1.top().getSuit() == "Clubs") p = CLUB;
-		cout << s << Foundation1.top().getRank() << " of " << Foundation1.top().getSuit() << RESET<<"\t";
+		cout << s << Foundation1.top().getRank() << Foundation1.top().getSuit() << RESET<<"\t";
 	}
 	else {
 		cout << "[  ]\t\t";
 	}
 	if (!Foundation2.isEmptyStack()) {
 		string s = whatColor(Foundation2.top().getColor());
-		cout << s << Foundation2.top().getRank() << " of " << Foundation2.top().getSuit() << RESET << "\t";
+		cout << s << Foundation2.top().getRank() << Foundation2.top().getSuit() << RESET << "\t";
 	}
 	else {
 		cout << "[  ]\t\t";
 	}
 	if (!Foundation3.isEmptyStack()) {
 		string s = whatColor(Foundation3.top().getColor());
-		cout << s << Foundation3.top().getRank() << " of " << Foundation3.top().getSuit() << RESET << "\t";
+		cout << s << Foundation3.top().getRank() << Foundation3.top().getSuit() << RESET << "\t";
 	}
 	else {
 		cout << "[  ]\t\t";
 	}
 	if (!Foundation4.isEmptyStack()) {
 		string s = whatColor(Foundation4.top().getColor());
-		cout << s << Foundation4.top().getRank() << " of " << Foundation4.top().getSuit() << RESET << "\n";
+		cout << s << Foundation4.top().getRank() << Foundation4.top().getSuit() << RESET << "\n";
 	}
 	else {
 		cout << "[  ]\n";
@@ -463,7 +453,7 @@ void Game::printDeck()
 					}
 					else {
 						string s = whatColor(tmpCard.getColor());
-						cout << s << tmpCard.getRank() << " of " << tmpCard.getSuit() << RESET << "\t";
+						cout << s << tmpCard.getRank() << tmpCard.getSuit() << RESET << "\t";
 					}
 				}
 
@@ -488,7 +478,7 @@ void Game::printFoundation(const Stack<Card>& foundation)
 	const std::string BOLD = "\033[1m";
 	if (!foundation.isEmptyStack()) {
 		string s = whatColor(foundation.top().getColor());
-		cout << s << foundation.top().getRank() << " of " << foundation.top().getSuit() << RESET << "\t";
+		cout << s << foundation.top().getRank() << foundation.top().getSuit() << RESET << "\t";
 	}
 	else {
 		cout << "[  ]\t\t";
