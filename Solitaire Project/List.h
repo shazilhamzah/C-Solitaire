@@ -38,7 +38,7 @@ public:
 	int getLength();
 	void setLength(int n);
 	T& getLastElement();
-	List<T> operator=(List<T>& rhs);
+	//List<T> operator=(List<T>& rhs);
 };
 
 /* CONSTRUCTORS	*/
@@ -157,12 +157,12 @@ inline T& List<T>::getLastElement()
 		return tail->prev->data;
 	}
 }
-
-template<typename T>
-inline List<T> List<T>::operator=(List<T>& rhs)
-{
-	this->head = rhs.head;
-	this->tail = rhs.tail;
-	this->length = rhs.length;
-	return *this;
-}
+//
+//template<typename T>
+//inline List<T> List<T>::operator=(List<T>& rhs)
+//{
+//	this->head = rhs.head;
+//	this->tail = rhs.tail;
+//	this->length = rhs.length;
+//	return *this;
+//}

@@ -13,6 +13,7 @@ public:
 	T pop();
 	int getStackTop();
 	int getMaxSize();
+	Stack<T>operator=(Stack<T>rhs);
 private:
 	int maxSize;
 	int stackTop; 
@@ -100,3 +101,14 @@ inline int Stack<T>::getMaxSize()
 {
 	return this->maxSize;
 }
+
+template<class T>
+inline Stack<T> Stack<T>::operator=(Stack<T> rhs)
+{
+	this->maxSize = rhs.maxSize;
+	this->stackTop = rhs.stackTop;
+	this->linkedList = rhs.linkedList;
+	return *this;
+}
+
+

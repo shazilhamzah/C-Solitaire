@@ -1,0 +1,573 @@
+[33mcommit dadb0771602ddf8e0a221543b5e91f9abc08ce91[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Shazil Hamzah <shazil.hamzah@outlook.com>
+Date:   Wed Oct 2 15:25:37 2024 +0500
+
+    ncie one
+
+[1mdiff --git a/Solitaire Project/Card.h b/Solitaire Project/Card.h[m
+[1mindex 439945a..8eea40e 100644[m
+[1m--- a/Solitaire Project/Card.h[m	
+[1m+++ b/Solitaire Project/Card.h[m	
+[36m@@ -9,7 +9,7 @@[m [mclass Card {[m
+ 	string color;[m
+ 	bool hide;[m
+ public:[m
+[31m-	Card():suit(""),rank(""),hide(false) {}[m
+[32m+[m	[32mCard():suit(""),rank(""),hide(true) {}[m
+ 	Card(string suit1, string rank1,string c,bool b) :suit(suit1), rank(rank1),color(c),hide(b) {}[m
+ 	Card(const Card& right) { this->color = right.color; this->rank = right.rank; this->suit = right.suit; this->hide = right.hide; }[m
+ 	Card operator=(const Card& right) { this->color = right.color; this->rank = right.rank; this->suit = right.suit; this->hide = right.hide; return *this; }[m
+[1mdiff --git a/Solitaire Project/Game.cpp b/Solitaire Project/Game.cpp[m
+[1mindex c5acd62..569121c 100644[m
+[1m--- a/Solitaire Project/Game.cpp[m	
+[1m+++ b/Solitaire Project/Game.cpp[m	
+[36m@@ -44,6 +44,10 @@[m [mvoid Game::__init__()[m
+ 		Command newCommand;[m
+ 		newCommand.setCommand(s);[m
+ [m
+[32m+[m		[32mif (s == "quit") {[m
+[32m+[m			[32mbreak;[m
+[32m+[m		[32m}[m
+[32m+[m
+ 		// ANALYZING THE COMMAND VALIDITY[m
+ 		if (!analyzeCommandType(newCommand)) {[m
+ 			cout << "Invalid Command!" << endl;[m
+[36m@@ -57,11 +61,11 @@[m [mvoid Game::__init__()[m
+ 		system("cls");[m
+ [m
+ 		/* MAKING TOP VISIBLE */[m
+[31m-		//makeTopVisible();[m
+[32m+[m		[32mmakeTopVisible();[m
+ [m
+ 		// PRINTING DECK[m
+[32m+[m		[32m//printDeck1();[m
+ 		printDeck();[m
+[31m-		printDeck1();[m
+ [m
+ 		// PUSHING IT INTO THE STACK[m
+ 		pushCommand(newCommand);[m
+[36m@@ -350,6 +354,11 @@[m [mvoid Game::printDeck()[m
+ 	const std::string RESET = "\033[0m";[m
+ 	const std::string BOLD = "\033[1m";[m
+ [m
+[32m+[m	[32mconst string CLUB = u8"\u2663";[m
+[32m+[m	[32mconst string SPADE = u8"\u2664";[m
+[32m+[m	[32mconst string HEART = u8"\u2665";[m
+[32m+[m	[32mconst string DIAMOND = u8"\u2666";[m
+[32m+[m
+ 	// ROW 1 - TOP HEADINGS[m
+ 	cout << "STOCK\t\tWASTE\t\t\tFOUNDATION 1\tFOUNDATION 2\tFOUNDATION 3\tFOUNDATION 4\n";[m
+ [m
+[36m@@ -357,13 +366,23 @@[m [mvoid Game::printDeck()[m
+ 	cout << "[  ]\t\t";[m
+ 	if (!WastePile.isEmptyStack()) {[m
+ 		string s = whatColor(WastePile.top().getColor());[m
+[31m-		cout << s << WastePile.top().getRank() << " of " << WastePile.top().getSuit() << RESET << "\t\t";[m
+[32m+[m		[32mstring p = "";[m
+[32m+[m		[32mif (WastePile.top().getSuit() == "Hearts") p = HEART;[m
+[32m+[m		[32mif (WastePile.top().getSuit() == "Diamonds") p = DIAMOND;[m
+[32m+[m		[32mif (WastePile.top().getSuit() == "Spades") p = SPADE;[m
+[32m+[m		[32mif (WastePile.top().getSuit() == "Clubs") p = CLUB;[m
+[32m+[m		[32mcout << s << WastePile.top().getRank() <<  p << RESET << "\t\t";[m
+ 	}[m
+ 	else {[m
+ 		cout << "[  ]\t\t\t";[m
+ 	}[m
+ 	if (!Foundation1.isEmptyStack()) {[m
+ 		string s = whatColor(Foundation1.top().getColor());[m
+[32m+[m		[32mstring p = "";[m
+[32m+[m		[32mif (Foundation1.top().getSuit() == "Hearts") p = HEART;[m
+[32m+[m		[32melse if (Foundation1.top().getSuit() == "Diamonds") p = DIAMOND;[m
+[32m+[m		[32melse if (Foundation1.top().getSuit() == "Spades") p = SPADE;[m
+[32m+[m		[32melse if (Foundation1.top().getSuit() == "Clubs") p = CLUB;[m
+ 		cout << s << Foundation1.top().getRank() << " of " << Foundation1.top().getSuit() << RESET<<"\t";[m
+ 	}[m
+ 	else {[m
+[36m@@ -403,13 +422,13 @@[m [mvoid Game::printDeck()[m
+ 	// ROW 6 - CARDS[m
+ 	List<Card> whatTableau; int tSize;[m
+ 	string s;[m
+[31m-	List<Card>::Iterator i1 = t1.end(); --i1;[m
+[31m-	List<Card>::Iterator i2 = t2.end(); --i2;[m
+[31m-	List<Card>::Iterator i3 = t3.end(); --i3;[m
+[31m-	List<Card>::Iterator i4 = t4.end(); --i4;[m
+[31m-	List<Card>::Iterator i5 = t5.end(); --i5;[m
+[31m-	List<Card>::Iterator i6 = t6.end(); --i6;[m
+[31m-	List<Card>::Iterator i7 = t7.end(); --i7;[m
+[32m+[m	[32mList<Card>::Iterator i1 = t1.begin(); ++i1;[m
+[32m+[m	[32mList<Card>::Iterator i2 = t2.begin(); ++i2;[m
+[32m+[m	[32mList<Card>::Iterator i3 = t3.begin(); ++i3;[m
+[32m+[m	[32mList<Card>::Iterator i4 = t4.begin(); ++i4;[m
+[32m+[m	[32mList<Card>::Iterator i5 = t5.begin(); ++i5;[m
+[32m+[m	[32mList<Card>::Iterator i6 = t6.begin(); ++i6;[m
+[32m+[m	[32mList<Card>::Iterator i7 = t7.begin(); ++i7;[m
+ 	List<Card>::Iterator whatIterator;[m
+ 	int findMax[7] = { t1.getLength(),t2.getLength(),t3.getLength() ,t4.getLength() ,t5.getLength() ,t6.getLength() ,t7.getLength() };[m
+ 	int max=0;[m
+[36m@@ -419,7 +438,7 @@[m [mvoid Game::printDeck()[m
+ 		}[m
+ 	}[m
+ [m
+[31m-	for (int j = 0; j < max; j++) {[m
+[32m+[m	[32mfor (int j = 0; j < 20; j++) {[m
+ 		for (int i = 1; i <= 7; i++) {[m
+ 			// Select the correct column[m
+ 			List<Card>::Iterator whatIterator;[m
+[36m@@ -430,36 +449,52 @@[m [mvoid Game::printDeck()[m
+ 			else if (i == 5 && j < t5.getLength()) { whatIterator = i5; }[m
+ 			else if (i == 6 && j < t6.getLength()) { whatIterator = i6; }[m
+ 			else if (i == 7 && j < t7.getLength()) { whatIterator = i7; }[m
+[31m-			else { // No more cards in this column, print empty space[m
+[32m+[m			[32melse { // No more cards in this column, print empty space[m[41m	[m
+ 				cout << "\t\t";[m
+ 				continue;[m
+ 			}[m
+ [m
+ 			// Print the card[m
+[31m-			Card tmpCard = *whatIterator;[m
+[31m-			if (tmpCard.getColor() == "Red" || tmpCard.getColor() == "Black") {[m
+[31m-				if (tmpCard.getHide()) {[m
+[31m-					cout << "[  ]\t\t";[m
+[31m-				}[m
+[31m-				else {[m
+[31m-					string s = whatColor(tmpCard.getColor());[m
+[31m-					cout << s << tmpCard.getRank() << " of " << tmpCard.getSuit() << RESET << "\t";[m
+[32m+[m			[32mif (whatIterator != t1.end() && whatIterator != t2.end() && whatIterator != t3.end() && whatIterator != t4.end() && whatIterator != t5.end() && whatIterator != t6.end() && whatIterator != t7.end()) {[m
+[32m+[m				[32mCard tmpCard = *whatIterator;[m
+[32m+[m				[32mif (tmpCard.getColor() == "Red" || tmpCard.getColor() == "Black") {[m
+[32m+[m					[32mif (tmpCard.getHide()) {[m
+[32m+[m						[32mcout << "[  ]\t\t";[m
+[32m+[m					[32m}[m
+[32m+[m					[32melse {[m
+[32m+[m						[32mstring s = whatColor(tmpCard.getColor());[m
+[32m+[m						[32mcout << s << tmpCard.getRank() << " of " << tmpCard.getSuit() << RESET << "\t";[m
+[32m+[m					[32m}[m
+ 				}[m
+[31m-			}[m
+ [m
+[31m-			// Decrement the iterator if there are more cards left to print[m
+[31m-			if (i == 1 && i1 != t1.begin()) --i1;[m
+[31m-			else if (i == 2 && i2 != t2.begin()) --i2;[m
+[31m-			else if (i == 3 && i3 != t3.begin()) --i3;[m
+[31m-			else if (i == 4 && i4 != t4.begin()) --i4;[m
+[31m-			else if (i == 5 && i5 != t5.begin()) --i5;[m
+[31m-			else if (i == 6 && i6 != t6.begin()) --i6;[m
+[31m-			else if (i == 7 && i7 != t7.begin()) --i7;[m
+[32m+[m				[32m// Decrement the iterator if there are more cards left to print[m
+[32m+[m				[32mif (i == 1) ++i1;[m
+[32m+[m				[32melse if (i == 2) ++i2;[m
+[32m+[m				[32melse if (i == 3) ++i3;[m
+[32m+[m				[32melse if (i == 4) ++i4;[m
+[32m+[m				[32melse if (i == 5) ++i5;[m
+[32m+[m				[32melse if (i == 6) ++i6;[m
+[32m+[m				[32melse if (i == 7) ++i7;[m
+[32m+[m			[32m}[m
+ 		}[m
+ 		cout << endl;[m
+ 	}[m
+ }[m
+ [m
+[32m+[m[32mvoid Game::printFoundation(const Stack<Card>& foundation)[m
+[32m+[m[32m{[m
+[32m+[m	[32mconst std::string RED = "\033[31m";[m
+[32m+[m	[32mconst std::string RESET = "\033[0m";[m
+[32m+[m	[32mconst std::string BOLD = "\033[1m";[m
+[32m+[m	[32mif (!foundation.isEmptyStack()) {[m
+[32m+[m		[32mstring s = whatColor(foundation.top().getColor());[m
+[32m+[m		[32mcout << s << foundation.top().getRank() << " of " << foundation.top().getSuit() << RESET << "\t";[m
+[32m+[m	[32m}[m
+[32m+[m	[32melse {[m
+[32m+[m		[32mcout << "[  ]\t\t";[m
+[32m+[m	[32m}[m
+[32m+[m[32m}[m
+[32m+[m
+ bool Game::matchWon()[m
+ {[m
+ 	if (Foundation1.getStackTop() == 13 && Foundation2.getStackTop() == 13 && Foundation3.getStackTop() == 13 && Foundation4.getStackTop() == 13) {[m
+[36m@@ -572,7 +607,7 @@[m [mbool Game::wasteToFoundation(char c, char e)[m
+ 	else if (c - '0' == 2)foundation = Foundation2;[m
+ 	else if (c - '0' == 3)foundation = Foundation3;[m
+ 	else if (c - '0' == 4)foundation = Foundation4;[m
+[31m-	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };[m
+[32m+[m	[32mstring arr[13] = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };[m
+ 	for (int i = 0; i < e - '0'; i++) {[m
+ 		if (WastePile.isEmptyStack()) {[m
+ 			cout << "Not enough cards in waste stack!" << endl;[m
+[36m@@ -637,7 +672,7 @@[m [mbool Game::wasteToTablue(char c, char e)[m
+ 	else if (c - '0' == 7)whatColumn2 = t7;[m
+ [m
+ 	// MOVING LOGIC USING ITERATORS[m
+[31m-	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };[m
+[32m+[m	[32mstring arr[13] = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };[m
+ 	for (int i = 0; i < e - '0'; i++)[m
+ 	{[m
+ 		if (WastePile.isEmptyStack()) {[m
+[36m@@ -667,6 +702,13 @@[m [mbool Game::wasteToTablue(char c, char e)[m
+ 					WastePile.pop();[m
+ 					wasteCard.setHide(false);[m
+ 					whatColumn2.insertAtTail(wasteCard);[m
+[32m+[m					[32mif (c - '0' == 1) t1 = whatColumn2;[m
+[32m+[m					[32melse if (c - '0' == 2) t2 = whatColumn2;[m
+[32m+[m					[32melse if (c - '0' == 3) t3 = whatColumn2;[m
+[32m+[m					[32melse if (c - '0' == 4) t4 = whatColumn2;[m
+[32m+[m					[32melse if (c - '0' == 5) t5 = whatColumn2;[m
+[32m+[m					[32melse if (c - '0' == 6) t6 = whatColumn2;[m
+[32m+[m					[32melse if (c - '0' == 7) t7 = whatColumn2;[m
+ 				}[m
+ 				else {[m
+ 					cout << "Waste stack card must be one less in rank to move!" << endl;[m
+[36m@@ -685,6 +727,7 @@[m [mbool Game::wasteToTablue(char c, char e)[m
+ bool Game::TablueToFoundation(char c, char f, char h)[m
+ {[m
+ 	List<Card>whatColumn1;[m
+[32m+[m	[32mcout << "\n"<<c - '0' << endl;[m
+ 	Stack<Card>foundation(13);[m
+ 	if (c - '0' == 1)whatColumn1 = t1;[m
+ 	else if (c - '0' == 2)whatColumn1 = t2;[m
+[36m@@ -699,7 +742,7 @@[m [mbool Game::TablueToFoundation(char c, char f, char h)[m
+ 	else if (f - '0' == 4)foundation = Foundation4;[m
+ [m
+ 	// MOVING LOGIC USING ITERATORS[m
+[31m-	string arr[13] = { "A","2","3","4","5","6","7","8","9","10","Q","K" };[m
+[32m+[m	[32mstring arr[13] = { "A","2","3","4","5","6","7","8","9","10","J","Q","K" };[m
+ 	for (int i = 0; i < h - '0'; i++)[m
+ 	{[m
+ 		if (whatColumn1.isEmpty()) {[m
+[36m@@ -719,6 +762,13 @@[m [mbool Game::TablueToFoundation(char c, char f, char h)[m
+ 					else if (f - '0' == 2)Foundation2 = foundation;[m
+ 					else if (f - '0' == 3)Foundation3 = foundation;[m
+ 					else if (f - '0' == 4)Foundation4 = foundation;[m
+[32m+[m					[32mif (c - '0' == 1) t1 = whatColumn1;[m
+[32m+[m					[32melse if (c - '0' == 2) t2 = whatColumn1;[m
+[32m+[m					[32melse if (c - '0' == 3) t3 = whatColumn1;[m
+[32m+[m					[32melse if (c - '0' == 4) t4 = whatColumn1;[m
+[32m+[m					[32melse if (c - '0' == 5) t5 = whatColumn1;[m
+[32m+[m					[32melse if (c - '0' == 6) t6 = whatColumn1;[m
+[32m+[m					[32melse if (c - '0' == 7) t7 = whatColumn1;[m
+ 					return true;[m
+ 				}[m
+ 				else {[m
+[36m@@ -833,6 +883,21 @@[m [mbool Game::tablueToTablue(char c, char f, char h)[m
+ 			return false;[m
+ 		}[m
+ 	}[m
+[32m+[m	[32mif (c - '0' == 1) t1 = whatColumn1;[m
+[32m+[m	[32melse if (c - '0' == 2) t2 = whatColumn1;[m
+[32m+[m	[32melse if (c - '0' == 3) t3 = whatColumn1;[m
+[32m+[m	[32melse if (c - '0' == 4) t4 = whatColumn1;[m
+[32m+[m	[32melse if (c - '0' == 5) t5 = whatColumn1;[m
+[32m+[m	[32melse if (c - '0' == 6) t6 = whatColumn1;[m
+[32m+[m	[32melse if (c - '0' == 7) t7 = whatColumn1;[m
+[32m+[m
+[32m+[m	[32mif (f - '0' == 1) t1 = whatColumn2;[m
+[32m+[m	[32melse if (f - '0' == 2) t2 = whatColumn2;[m
+[32m+[m	[32melse if (f - '0' == 3) t3 = whatColumn2;[m
+[32m+[m	[32melse if (f - '0' == 4) t4 = whatColumn2;[m
+[32m+[m	[32melse if (f - '0' == 5) t5 = whatColumn2;[m
+[32m+[m	[32melse if (f - '0' == 6) t6 = whatColumn2;[m
+[32m+[m	[32melse if (f - '0' == 7) t7 = whatColumn2;[m
+ 	return true;[m
+ }[m
+ [m
+[36m@@ -1058,6 +1123,6 @@[m [mStack<Card>& Game::getFoundationFromChar(char foundationNum) {[m
+ 	case '2': return Foundation2;[m
+ 	case '3': return Foundation3;[m
+ 	case '4': return Foundation4;[m
+[31m-	default: throw std::runtime_error("Invalid foundation number");[m
+[32m+[m	[32mdefault: throw runtime_error("Invalid foundation number");[m
+ 	}[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/Solitaire Project/Game.h b/Solitaire Project/Game.h[m
+[1mindex bb5fbdc..dfbb8ba 100644[m
+[1m--- a/Solitaire Project/Game.h[m	
+[1m+++ b/Solitaire Project/Game.h[m	
+[36m@@ -52,4 +52,5 @@[m [mpublic:[m
+ 	bool undoTableauToTableau(char sourceCol, char destCol, char numCards);[m
+ 	bool undoTableauToFoundation(char sourceCol, char foundationNum, char numCards);[m
+ 	bool undoWasteToTableau(char destCol);[m
+[32m+[m	[32mvoid printFoundation(const Stack<Card>& foundation);[m
+ };[m
+\ No newline at end of file[m
+[1mdiff --git a/Solitaire Project/List.h b/Solitaire Project/List.h[m
+[1mindex 196e983..d26a810 100644[m
+[1m--- a/Solitaire Project/List.h[m	
+[1m+++ b/Solitaire Project/List.h[m	
+[36m@@ -38,6 +38,7 @@[m [mpublic:[m
+ 	int getLength();[m
+ 	void setLength(int n);[m
+ 	T& getLastElement();[m
+[32m+[m	[32mList<T> operator=(List<T>& rhs);[m
+ };[m
+ [m
+ /* CONSTRUCTORS	*/[m
+[36m@@ -111,8 +112,8 @@[m [minline void List<T>::removeLastElement()[m
+ 		remove->prev->next = tail;[m
+ 		this->tail->prev = remove->prev;[m
+ 		delete remove;[m
+[32m+[m		[32mthis->length--;[m
+ 	}[m
+[31m-	this->length--;[m
+ }[m
+ [m
+ template<typename T>[m
+[36m@@ -156,3 +157,12 @@[m [minline T& List<T>::getLastElement()[m
+ 		return tail->prev->data;[m
+ 	}[m
+ }[m
+[32m+[m
+[32m+[m[32mtemplate<typename T>[m
+[32m+[m[32minline List<T> List<T>::operator=(List<T>& rhs)[m
+[32m+[m[32m{[m
+[32m+[m	[32mthis->head = rhs.head;[m
+[32m+[m	[32mthis->tail = rhs.tail;[m
+[32m+[m	[32mthis->length = rhs.length;[m
+[32m+[m	[32mreturn *this;[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/Solitaire Project/Stack.h b/Solitaire Project/Stack.h[m
+[1mindex 39ba72d..897613c 100644[m
+[1m--- a/Solitaire Project/Stack.h[m	
+[1m+++ b/Solitaire Project/Stack.h[m	
+[36m@@ -70,7 +70,7 @@[m [minline Stack<T>::Stack(int stackSize)[m
+ 			maxSize = stackSize;[m
+ 		}[m
+ 		stackTop = 0;[m
+[31m-		linkedList = List<T>();[m
+[32m+[m		[32m//linkedList = List<T>();[m
+ }[m
+ [m
+ template<class T>[m
+[1mdiff --git a/Solitaire Project/main.cpp b/Solitaire Project/main.cpp[m
+[1mindex 30c70c2..2d554dc 100644[m
+[1m--- a/Solitaire Project/main.cpp[m	
+[1m+++ b/Solitaire Project/main.cpp[m	
+[36m@@ -1,8 +1,10 @@[m
+ ﻿#include<iostream>[m
+[32m+[m[32m#include<Windows.h>[m
+ #include"Game.h"[m
+ using namespace std;[m
+ [m
+ int main() {[m
+[32m+[m	[32mSetConsoleOutputCP(CP_UTF8);[m
+ 	Game game{};[m
+ 	return 0;[m
+ }[m
+\ No newline at end of file[m
+
+[33mcommit 8e3e7805ac6726bc944e45228cbba598bdcab54e[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: Shazil Hamzah <shazil.hamzah@outlook.com>
+Date:   Sun Sep 29 20:42:22 2024 +0500
+
+    printDeck() function error left
+
+[1mdiff --git a/Solitaire Project/Card.h b/Solitaire Project/Card.h[m
+[1mindex 66893fd..439945a 100644[m
+[1m--- a/Solitaire Project/Card.h[m	
+[1m+++ b/Solitaire Project/Card.h[m	
+[36m@@ -9,7 +9,7 @@[m [mclass Card {[m
+ 	string color;[m
+ 	bool hide;[m
+ public:[m
+[31m-	Card():suit(""),rank("") {}[m
+[32m+[m	[32mCard():suit(""),rank(""),hide(false) {}[m
+ 	Card(string suit1, string rank1,string c,bool b) :suit(suit1), rank(rank1),color(c),hide(b) {}[m
+ 	Card(const Card& right) { this->color = right.color; this->rank = right.rank; this->suit = right.suit; this->hide = right.hide; }[m
+ 	Card operator=(const Card& right) { this->color = right.color; this->rank = right.rank; this->suit = right.suit; this->hide = right.hide; return *this; }[m
+[1mdiff --git a/Solitaire Project/Game.cpp b/Solitaire Project/Game.cpp[m
+[1mindex af11d96..c5acd62 100644[m
+[1m--- a/Solitaire Project/Game.cpp[m	
+[1m+++ b/Solitaire Project/Game.cpp[m	
+[36m@@ -31,6 +31,9 @@[m [mvoid Game::__init__()[m
+ 	/* PLACING CARDS IN STOCK */[m
+ 	placingInStock(cards);[m
+ [m
+[32m+[m	[32m/* MAKING TOP VISIBLE */[m
+[32m+[m	[32mmakeTopVisible();[m
+[32m+[m
+ 	/* PRINTING DECK */[m
+ 	printDeck();[m
+ [m
+[36m@@ -53,8 +56,12 @@[m [mvoid Game::__init__()[m
+ [m
+ 		system("cls");[m
+ [m
+[32m+[m		[32m/* MAKING TOP VISIBLE */[m
+[32m+[m		[32m//makeTopVisible();[m
+[32m+[m
+ 		// PRINTING DECK[m
+ 		printDeck();[m
+[32m+[m		[32mprintDeck1();[m
+ [m
+ 		// PUSHING IT INTO THE STACK[m
+ 		pushCommand(newCommand);[m
+[36m@@ -199,129 +206,129 @@[m [mvoid Game::placingInStock(Card**& cards)[m
+ 	}[m
+ }[m
+ [m
+[31m-//void Game::printDeck()[m
+[31m-//{[m
+[31m-//	/* PRINTING TABLEAUS */[m
+[31m-//	List<Card> whatTableau; int tSize;[m
+[31m-//	string s;[m
+[31m-//	List<Card>::Iterator i1;[m
+[31m-//[m
+[31m-//	for (int i = 1; i <= 7; i++)[m
+[31m-//	{[m
+[31m-//		if (i == 1) { whatTableau = t1; s = "Tableau 1:\n"; }[m
+[31m-//		else if (i == 2) { whatTableau = t2; s = "Tableau 2:\n"; }[m
+[31m-//		else if (i == 3) { whatTableau = t3; s = "Tableau 3:\n"; }[m
+[31m-//		else if (i == 4) { whatTableau = t4; s = "Tableau 4:\n"; }[m
+[31m-//		else if (i == 5) { whatTableau = t5; s = "Tableau 5:\n"; }[m
+[31m-//		else if (i == 6) { whatTableau = t6; s = "Tableau 6:\n"; }[m
+[31m-//		else if (i == 7) { whatTableau = t7; s = "Tableau 7:\n"; }[m
+[31m-//[m
+[31m-//		cout << s;[m
+[31m-//		i1 = whatTableau.begin();[m
+[31m-//		for (i1 = whatTableau.end(); --i1!=whatTableau.begin();) {[m
+[31m-//			Card newCard = *i1;[m
+[31m-//			newCard.print();[m
+[31m-//		}[m
+[31m-//		cout << endl;[m
+[31m-//	}[m
+[31m-//[m
+[31m-//	/* PRINTING STOCK */[m
+[31m-//	Stack<Card> tempStockStack(24);[m
+[31m-//	int stockSize = Stock.getStackTop();[m
+[31m-//	cout << "Stock: " << endl;[m
+[31m-//	for (int i = 0; i < stockSize; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = Stock.pop();[m
+[31m-//		tempCard.print();[m
+[31m-//		tempStockStack.push(tempCard);[m
+[31m-//	}[m
+[31m-//	for (int i = 0; i < stockSize; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = tempStockStack.pop();[m
+[31m-//		Stock.push(tempCard);[m
+[31m-//	}[m
+[31m-//[m
+[31m-//	/* PRINTING WASTE */[m
+[31m-//	Stack<Card> tempWasteStack(24);[m
+[31m-//	int wasteSize = WastePile.getStackTop();[m
+[31m-//	cout << "Waste: " << endl;[m
+[31m-//	for (int i = 0; i < wasteSize; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = WastePile.pop();[m
+[31m-//		tempCard.print();[m
+[31m-//		tempWasteStack.push(tempCard);[m
+[31m-//	}[m
+[31m-//	for (int i = 0; i < wasteSize; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = tempWasteStack.pop();[m
+[31m-//		WastePile.push(tempCard);[m
+[31m-//	}[m
+[31m-//[m
+[31m-//	/* PRINTING FOUNDATIONS */[m
+[31m-//	// Foundation 1[m
+[31m-//	Stack<Card> tempFoundationStack1(13);[m
+[31m-//	int foundationSize1 = Foundation1.getStackTop();[m
+[31m-//	cout << "Foundation 1: " << endl;[m
+[31m-//	for (int i = 0; i < foundationSize1; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = Foundation1.pop();[m
+[31m-//		tempCard.print();[m
+[31m-//		tempFoundationStack1.push(tempCard);[m
+[31m-//	}[m
+[31m-//	for (int i = 0; i < foundationSize1; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = tempFoundationStack1.pop();[m
+[31m-//		Foundation1.push(tempCard);[m
+[31m-//	}[m
+[31m-//[m
+[31m-//	// Foundation 2[m
+[31m-//	Stack<Card> tempFoundationStack2(13);[m
+[31m-//	int foundationSize2 = Foundation2.getStackTop();[m
+[31m-//	cout << "Foundation 2: " << endl;[m
+[31m-//	for (int i = 0; i < foundationSize2; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = Foundation2.pop();[m
+[31m-//		tempCard.print();[m
+[31m-//		tempFoundationStack2.push(tempCard);[m
+[31m-//	}[m
+[31m-//	for (int i = 0; i < foundationSize2; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = tempFoundationStack2.pop();[m
+[31m-//		Foundation2.push(tempCard);[m
+[31m-//	}[m
+[31m-//[m
+[31m-//	// Foundation 3[m
+[31m-//	Stack<Card> tempFoundationStack3(13);[m
+[31m-//	int foundationSize3 = Foundation3.getStackTop();[m
+[31m-//	cout << "Foundation 3: " << endl;[m
+[31m-//	for (int i = 0; i < foundationSize3; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = Foundation3.pop();[m
+[31m-//		tempCard.print();[m
+[31m-//		tempFoundationStack3.push(tempCard);[m
+[31m-//	}[m
+[31m-//	for (int i = 0; i < foundationSize3; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = tempFoundationStack3.pop();[m
+[31m-//		Foundation3.push(tempCard);[m
+[31m-//	}[m
+[31m-//[m
+[31m-//	// Foundation 4[m
+[31m-//	Stack<Card> tempFoundationStack4(13);[m
+[31m-//	int foundationSize4 = Foundation4.getStackTop();[m
+[31m-//	cout << "Foundation 4: " << endl;[m
+[31m-//	for (int i = 0; i < foundationSize4; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = Foundation4.pop();[m
+[31m-//		tempCard.print();[m
+[31m-//		tempFoundationStack4.push(tempCard);[m
+[31m-//	}[m
+[31m-//	for (int i = 0; i < foundationSize4; i++)[m
+[31m-//	{[m
+[31m-//		Card tempCard = tempFoundationStack4.pop();[m
+[31m-//		Foundation4.push(tempCard);[m
+[31m-//	}[m
+[31m-//}[m
+[32m+[m[32mvoid Game::printDeck1()[m
+[32m+[m[32m{[m
+[32m+[m	[32m/* PRINTING TABLEAUS */[m
+[32m+[m	[32mList<Card> whatTableau; int tSize;[m
+[32m+[m	[32mstring s;[m
+[32m+[m	[32mList<Card>::Iterator i1;[m
+[32m+[m
+[32m+[m	[32mfor (int i = 1; i <= 7; i++)[m
+[32m+[m	[32m{[m
+[32m+[m		[32mif (i == 1) { whatTableau = t1; s = "Tableau 1:\n"; }[m
+[32m+[m		[32melse if (i == 2) { whatTableau = t2; s = "Tableau 2:\n"; }[m
+[32m+[m		[32melse if (i == 3) { whatTableau = t3; s = "Tableau 3:\n"; }[m
+[32m+[m		[32melse if (i == 4) { whatTableau = t4; s = "Tableau 4:\n"; }[m
+[32m+[m		[32melse if (i == 5) { whatTableau = t5; s = "Tableau 5:\n"; }[m
+[32m+[m		[32melse if (i == 6) { whatTableau = t6; s = "Tableau 6:\n"; }[m
+[32m+[m		[32melse if (i == 7) { whatTableau = t7; s = "Tableau 7:\n"; }[m
+[32m+[m
+[32m+[m		[32mcout << s;[m
+[32m+[m		[32mi1 = whatTableau.begin();[m
+[32m+[m		[32mfor (i1 = whatTableau.end(); --i1!=whatTableau.begin();) {[m
+[32m+[m			[32mCard newCard = *i1;[m
+[32m+[m			[32mnewCard.print();[m
+[32m+[m		[32m}[m
+[32m+[m		[32mcout << endl;[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m/* PRINTING STOCK */[m
+[32m+[m	[32mStack<Card> tempStockStack(24);[m
+[32m+[m	[32mint stockSize = Stock.getStackTop();[m
+[32m+[m	[32mcout << "Stock: " << endl;[m
+[32m+[m	[32mfor (int i = 0; i < stockSize; i++)[m
+[32m+[m	[32m{[m
+[32m+[m		[32mCard tempCard = Stock.pop();[m
+[32m+[m		[32mtempCard.print();[m
+[32m+[m		[32mtempStockStack.push(tempCard);[m
+[32m+[m	[32m}[m
+[32m+[m	[32mfor (int i = 0; i < stockSize; i++)[m
+[32m+[m	[32m{[m
+[32m+[m		[32mCard tempCard = tempStockStack.pop();[m
+[32m+[m		[32mStock.push(tempCard);[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32m/* PRINTING WASTE 
